@@ -123,12 +123,15 @@ const addTaskCategory = async function(categoryTitle) {
 
 const deleteTaskCategory = async function (categoryId) {
 
-    const response = await fetch(`${BASE_URL}categories/${categoryId}`, {
-        method: "DELETE",
-    });
+    // const response = await fetch(`${BASE_URL}categories/${categoryId}`, {
+    //     method: "DELETE",
+    // });
+    //
+    // if (!response.ok) throw new Error("Could not delete the category");
+    const {id: catId} = categoryId;
 
-    if (!response.ok) throw new Error("Could not delete the category");
-
+    const response = await apiInstance.delete(`categories/${catId}`);
+    return response.data;
 }
 
 const filterTodos = async function(categoryId) {

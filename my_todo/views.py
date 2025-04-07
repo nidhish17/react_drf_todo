@@ -43,7 +43,7 @@ class TaskCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return TaskCategory.objects.filter(todo__user=self.request.user)
+        return TaskCategory.objects.filter(user=self.request.user)
 
 class TaskListByCategory(generics.ListAPIView):
     serializer_class = ToDoSerializer
