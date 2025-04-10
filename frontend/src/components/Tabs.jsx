@@ -62,10 +62,10 @@ const TabLabel = function ({value, children, whenClicked, open=false}) {
     )
 }
 
-const TabContent = function ({value, children}) {
+const TabContent = function ({value, children, className}) {
     const {tab} = useContext(TabsContext);
     return (
-        <div className="">
+        <div className={className}>
             {tab === value && children}
         </div>
     )

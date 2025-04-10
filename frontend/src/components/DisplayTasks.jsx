@@ -40,9 +40,8 @@ const DisplayTasks = function () {
 
     const handleDelCat = function () {
         const catId = taskCategories.find((category) => category.id === selectedCategory);
+        deleteCat(catId);
 
-
-        deleteCat(catId)
     }
 
     return (
@@ -52,17 +51,15 @@ const DisplayTasks = function () {
                 {taskCategories?.map((category) => {
                     const {id: categoryId, category_title: categoryTitle} = category;
                     return (
-                        <>
-                            <Tabs.Label whenClicked={() => fetchTasks(categoryId)} value={`${categoryTitle}${categoryId}`} key={categoryId} >{categoryTitle}</Tabs.Label>
-                        </>
+                        <Tabs.Label whenClicked={() => fetchTasks(categoryId)} value={`${categoryTitle}${categoryId}`} key={categoryId} >{categoryTitle}</Tabs.Label>
                     )
                 })}
             </TabList>
             <Tabs.Content value={"all"}>
                 {loadingAllTasks ? <CgSpinner className="text-center mt-10 animate-spin text-7xl" /> : <ToDosTable tasks={allTasks} />}
             </Tabs.Content>
-            {selectedCategory && (
-                <Tabs.Content value={`${taskCategories.find((category) => category.id === selectedCategory)?.category_title}${selectedCategory}`}>
+            {selectedCategory && selectedCategory !== "all" && (
+                <Tabs.Content className="relative"  value={`${taskCategories.find((category) => category.id === selectedCategory)?.category_title}${selectedCategory}`}>
                     <div className="flex flex-col gap-y-4">
                         <button disabled={isDelCat} onClick={() => handleDelCat()} className="self-end bg-red-500 hover:bg-red-600 capitalize px-4 py-2 rounded cursor-pointer duration-200 transition-colors">del cat</button>
                         <ToDosTable tasks={!isPending && tasksData} />

@@ -1,7 +1,7 @@
-const Table = function ({children}) {
+const Table = function ({children, className}) {
     return (
         <>
-            <div className="overflow-x-scroll overflow-y-hidden rounded-lg shadow bg-neutral-800">
+            <div className={`overflow-x-scroll overflow-y-hidden rounded-lg shadow bg-neutral-800 ${className}`}>
                 <table className="w-full">
                     {children}
                 </table>
@@ -18,9 +18,9 @@ const Header = function ({children}) {
     )
 }
 
-const Body = function ({children}) {
+const Body = function ({children, className}) {
     return (
-        <tbody>
+        <tbody className={className}>
         {children}
         </tbody>
     )
