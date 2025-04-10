@@ -37,7 +37,7 @@ const Login = function () {
                     <div className="flex flex-col">
                         <label htmlFor="password" className="">Password</label>
                         <input type="password" name="password" className="px-4 py-2 rounded outline-none ring-1 focus:ring-purple-700 font-semibold placeholder:text-zinc-500 placeholder:font-semibold"
-                               placeholder="username" />
+                               placeholder="password" />
                     </div>
 
                     <button disabled={isLoggingIn} className="uppercase px-4 py-2 outline-rose-400 outline hover:bg-rose-500/50 transition-colors duration-200 rounded cursor-pointer">login</button>

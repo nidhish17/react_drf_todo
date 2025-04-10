@@ -11,6 +11,7 @@ const useDeleteCategory = function () {
         onSuccess: () => {
             toast.success("Category deleted successfully");
             queryClient.invalidateQueries({queryKey: ["task-categories"]});
+            queryClient.invalidateQueries({queryKey: ["todos"]});
         },
         onError: (err) => {
             toast.error("couldn't delete", err.message);
