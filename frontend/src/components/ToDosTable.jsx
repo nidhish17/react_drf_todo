@@ -11,6 +11,7 @@ import {useModal} from "./Modal.jsx";
 import {IoMdMore} from "react-icons/io";
 import Option from "./Option.jsx";
 import {BiPencil} from "react-icons/bi";
+import CreateTodo from "./CreateTodo.jsx";
 
 const ToDosTable = function ({tasks}) {
 
@@ -38,11 +39,12 @@ const ToDosTable = function ({tasks}) {
         })
     }
 
-    function handleEditTask(id) {
+    const {openModal} = useModal();
 
+    function handleEditTask(id) {
+        console.log("editing ", id)
     }
 
-    const {openModal} = useModal();
     if (!tasks?.length) return <p className="capitalize text-xl">No tasks added yet :(</p>;
 
 
@@ -118,7 +120,14 @@ const ToDosTable = function ({tasks}) {
                                             <MdDelete />
                                             <p className="">Delete</p>
                                         </button>
-                                        <button onClick={() => handleEditTask(task_id)} className="w-full flex gap-x-2 items-center cursor-pointer p-1.5 bg-yellow-500 hover:bg-yellow-600 rounded transition-all duration-200 text-sm font-medium">
+                                        <button onClick={() => openModal({
+                                            title: `edit ${task_title}`,
+                                            content:
+                                                <CreateTodo
+                                                type={"edit"}
+                                                editData={{task_title, task_description, task_id, task_category_title, task_priority, task_end}}
+                                                />
+                                        })} className="w-full flex gap-x-2 items-center cursor-pointer p-1.5 bg-yellow-500 hover:bg-yellow-600 rounded transition-all duration-200 text-sm font-medium">
                                             <BiPencil className="" />
                                             <p className="">Edit</p>
                                         </button>

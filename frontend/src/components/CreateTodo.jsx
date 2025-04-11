@@ -1,4 +1,4 @@
-import {useReducer} from "react";
+import {useEffect, useReducer} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DropDown from "./DropDown.jsx";
@@ -12,6 +12,8 @@ import AddCategoryForm from "./AddCategoryForm.jsx";
 import {MdDelete} from "react-icons/md";
 import PrivateRoute from "./PrivateRoute.jsx";
 import ShowCategories from "./ShowCategories.jsx";
+import SelectPriority from "@/components/SelectPriority.jsx";
+
 
 const initialState = {
     taskTitle: "",
@@ -21,7 +23,7 @@ const initialState = {
     taskCategory: "",
 }
 
-const CreateTodo = function () {
+const CreateTodo = function ({type="create", editData=null}) {
     function reducer(state, action) {
         switch (action.type) {
             case "setEndDate":
@@ -36,6 +38,8 @@ const CreateTodo = function () {
                 return {...state, taskCategory: action.payload};
             case "resetForm":
                 return {...state, taskTitle: "", taskDescription: ""};
+            case "initializeEditData":
+                return {...state, ...action.payload};
             default:
                 throw Error("Unknown Action: " + action.type);
         }
@@ -43,6 +47,21 @@ const CreateTodo = function () {
 
     const [{taskEndDate, taskDescription, taskTitle, taskPriority, taskCategory}, dispatch] = useReducer(reducer, initialState);
     const {isAddingTask, addMutation} = UseAddMutation();
+
+    useEffect(() => {
+        if (type === "edit" && editData) {
+            dispatch({
+                type: "initializeEditData",
+                payload: {
+                    taskTitle: editData.task_title,
+                    taskDescription: editData.task_description,
+                    taskEndDate: editData.task_end,
+                    taskPriority: editData.task_priority,
+                    taskCategory: editData.task_category_title
+                }
+            })
+        }
+    }, [])
 
     const handleSubmit = function(e) {
         e.preventDefault();
@@ -64,12 +83,9 @@ const CreateTodo = function () {
     }
 
 
-
-    const {openModal} = useModal();
-
     return (
-        <form className="space-y-2" onSubmit={handleSubmit}>
-            <h2 className="font-bold tracking-wider text-xl capitalize bg-gradient-to-r from-cyan-400 via-violet-600 to-pink-600 inline-block bg-clip-text text-transparent">create task</h2>
+        <form className="space-y-2 text-neutral-100" onSubmit={handleSubmit}>
+            <h2 className="font-bold tracking-wider text-xl capitalize bg-gradient-to-r from-cyan-400 via-violet-600 to-pink-600 inline-block bg-clip-text text-transparent">{type} task</h2>
             <div className="flex flex-col gap-y-6">
                 <input type="text"
                        placeholder="Task Title Here...."
@@ -98,23 +114,22 @@ const CreateTodo = function () {
                         shouldCloseOnSelect={false}
                         popperPlacement="bottom-start"
                         placeholderText="Pick End Date For Task"
-                        className="relative pl-8 px-6 py-2 cursor-pointer rounded outline-none ring ring-white w-full focus:ring-purple-700 text-neutral-100"
+                        className="relative pl-8 px-6 py-2 cursor-pointer rounded outline-none ring ring-white w-full focus:ring-purple-700"
                     />
                     <label htmlFor="datePicker" className="absolute left-2 cursor-pointer">
                         <FaCalendarAlt className="text-white" />
                     </label>
                 </div>
-                <DropDown onOptionChange={(value) => dispatch({type: "setPriority", payload: value})} placeholder="Select Priority">
-                    <DropDown.Option value={1}>⭐</DropDown.Option>
-                    <DropDown.Option value={2}>⭐⭐</DropDown.Option>
-                    <DropDown.Option value={3}>⭐⭐⭐</DropDown.Option>
-                    <DropDown.Option value={4}>⭐⭐⭐⭐</DropDown.Option>
-                    <DropDown.Option value={5}>⭐⭐⭐⭐⭐</DropDown.Option>
-                </DropDown>
-                <PrivateRoute message="" needNavigators={false}>
-                    <ShowCategories dispatch={dispatch} />
-                </PrivateRoute>
-                <button disabled={isAddingTask} className="capitalize px-4 py-2 bg-cyan-700 font-semibold hover:bg-cyan-600 transition-colors duration-200 cursor-pointer sm:self-end rounded" type="submit">create task</button>
+
+                {/*shadCN DropDown*/}
+                <SelectPriority onOptionChange={(value) =>dispatch({type: "setPriority", payload: value})} placeholder="Select Priority" />
+
+                {/*<PrivateRoute message="" needNavigators={false}>*/}
+                {/*    <div onClick={(e) => e.stopPropagation()} className="">*/}
+                {/*        <ShowCategories dispatch={dispatch} />*/}
+                {/*    </div>*/}
+                {/*</PrivateRoute>*/}
+                <button disabled={isAddingTask} className={`font-semibold capitalize px-4 py-2 ${type === "create" ? "bg-cyan-700 hover:bg-cyan-600" : type === "edit" && "bg-yellow-500 hover:bg-yellow-600"} transition-colors duration-200 cursor-pointer sm:self-end rounded`} type="submit">{type === "create" ? "Create" : "Edit"} Task</button>
             </div>
         </form>
     );

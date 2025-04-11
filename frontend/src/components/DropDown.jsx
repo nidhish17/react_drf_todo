@@ -4,7 +4,7 @@ import {IoIosArrowDown, IoIosArrowUp} from "react-icons/io";
 
 const DropDownContext = createContext(null);
 
-const DropDown = function ({className, children, value, onOptionChange, placeholder = "Select An Option"}) {
+const DropDown = function ({className, children, value, onOptionChange, placeholder = "Select An Option", initialValue=null}) {
 
     const [showValues, setShowValues] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value);
@@ -41,6 +41,11 @@ const DropDown = function ({className, children, value, onOptionChange, placehol
         }
     }, []);
 
+    useEffect(() => {
+        if (initialValue) {
+            setSelectedValue(initialValue);
+        }
+    }, [initialValue]);
 
     const contextValue = {
         handleSelect,
