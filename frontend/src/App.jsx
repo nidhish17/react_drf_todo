@@ -7,6 +7,7 @@ import Register from "./components/Register.jsx";
 import Main from "./components/Main.jsx";
 import AuthProvider from "./components/AuthProvider.jsx";
 import PublicRoute from "./components/PublicRoute.jsx";
+import {Tooltip} from "react-tooltip";
 
 
 const queryClient = new QueryClient()
@@ -28,6 +29,7 @@ const App = function () {
 
 
                 <Toaster position={"top-center"} gutter={12}/>
+                <Tooltip id="tren" />
             </QueryClientProvider>
         </AuthProvider>
     );

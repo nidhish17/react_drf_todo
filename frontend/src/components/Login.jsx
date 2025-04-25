@@ -27,7 +27,7 @@ const Login = function () {
     return (
         <main className="max-w-screen-2xl mx-auto p-4 sm:p-8 md:p-12 lg:p-16 2xl:p-20">
             <form className="flex flex-col" onSubmit={handleSubmit}>
-                <div className="w-lg self-center flex flex-col gap-y-4">
+                <div className="w-full sm:max-w-lg self-center flex flex-col gap-y-4">
                     <div className="flex flex-col">
                         <label htmlFor="username" className="">Username</label>
                         <input type="text" id="username" name="username" className="px-4 py-2 rounded outline-none ring-1 focus:ring-purple-700 font-semibold placeholder:text-zinc-500 placeholder:font-semibold"

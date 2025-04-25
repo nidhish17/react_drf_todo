@@ -8,7 +8,6 @@ import {MdDelete} from "react-icons/md";
 import useDeleteMutation from "../todoServices/deleteMutation.js";
 import {FaInfo} from "react-icons/fa";
 import {useModal} from "./Modal.jsx";
-import {IoMdMore} from "react-icons/io";
 import Option from "./Option.jsx";
 import {BiPencil} from "react-icons/bi";
 import CreateTodo from "./CreateTodo.jsx";
@@ -99,9 +98,10 @@ const ToDosTable = function ({tasks}) {
                             <Table.TD>
                                     <span data-daysleft={daysLeft}
                                           className={`${!task_status && daysLeft < 0 && "bg-red-500"} ${!task_status && daysLeft > 0 && "bg-zinc-500"} ${!task_status && daysLeft === 0 && "bg-yellow-400"} 
-                                    px-2 py-1 text-center uppercase text-xs font-normal tracking-wider rounded-full bg-green-400 relative 
-                                    ${!task_status && "after:content-[attr(data-daysleft)]"} hover:after:scale-y-100 after:scale-y-0 after:transition-all after:duration-100 after:absolute after:w-8 after:-top-1/2 after:rounded-full after:bg-white after:left-1/2 after:-translate-x-1/2 after:-translate-y-10/12
-                                    ${!task_status && "before:content-['']"} before:size-3 before:rotate-45 before:absolute before:bg-white after:text-neutral-800 before:-top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 ${!task_status && "hover:before:scale-y-100"} before:scale-y-0 before:duration-100`}>
+                                    px-2 py-1 text-center uppercase text-xs font-normal tracking-wider rounded-full bg-green-400 relative
+                                    `}
+                                    data-tooltip-id="tren" data-tooltip-content={!task_status ? daysLeft : ""}
+                                    >
                                         {task_status ? "completed" : daysLeft > 0 ? `on time` : daysLeft < 0 ? `due ${daysLeft}` : daysLeft === 0 && "today"}
                                     </span>
                             </Table.TD>

@@ -33,7 +33,7 @@ const DisplayTasks = function () {
         staleTime: 10000
     });
 
-    console.log(tasksData)
+    // console.log(tasksData)
     const fetchTasks = function(categoryId) {
         setSelectedCategory(categoryId);
     }

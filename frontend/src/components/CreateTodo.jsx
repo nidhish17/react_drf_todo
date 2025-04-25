@@ -1,4 +1,4 @@
-import {useEffect, useReducer} from "react";
+import {useEffect, useReducer, useRef} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DropDown from "./DropDown.jsx";
@@ -13,6 +13,7 @@ import {MdDelete} from "react-icons/md";
 import PrivateRoute from "./PrivateRoute.jsx";
 import ShowCategories from "./ShowCategories.jsx";
 import SelectPriority from "@/components/SelectPriority.jsx";
+import DropDownv2 from "@/components/DropDownv2.jsx";
 
 
 const initialState = {
@@ -24,6 +25,9 @@ const initialState = {
 }
 
 const CreateTodo = function ({type="create", editData=null}) {
+
+    const priorityRef = useRef();
+
     function reducer(state, action) {
         switch (action.type) {
             case "setEndDate":
@@ -50,6 +54,7 @@ const CreateTodo = function ({type="create", editData=null}) {
 
     useEffect(() => {
         if (type === "edit" && editData) {
+            console.log(editData);
             dispatch({
                 type: "initializeEditData",
                 payload: {
@@ -65,23 +70,37 @@ const CreateTodo = function ({type="create", editData=null}) {
 
     const handleSubmit = function(e) {
         e.preventDefault();
+        console.log(taskPriority, "taskPriority");
         if (!taskEndDate || !taskTitle || !taskPriority || !taskDescription) {
             toast.error("Please fill all the fields");
+            priorityRef.current.resetSelect();
             return;
         }
 
-        addMutation({
+        if (type === "create") {
+            addMutation({
             taskDetails: {
                 taskTitle, taskPriority, taskDescription, taskEndDate, taskCategory
             },
         }, {
             onSuccess: () => {
                 dispatch({type: "resetForm"});
+            },
+            onError: () => {
+                console.log("create error")
+                // priorityRef.current.resetSelect();
             }
         });
+        } else if (type === "edit") {
+            console.log("Edited Form To Be Handled Here");
+        }
+
 
     }
 
+    const handleReset = function () {
+        dispatch({type:"resetForm"});
+    }
 
     return (
         <form className="space-y-2 text-neutral-100" onSubmit={handleSubmit}>
@@ -122,14 +141,27 @@ const CreateTodo = function ({type="create", editData=null}) {
                 </div>
 
                 {/*shadCN DropDown*/}
-                <SelectPriority onOptionChange={(value) =>dispatch({type: "setPriority", payload: value})} placeholder="Select Priority" />
+                {/*<SelectPriority ref={priorityRef} onOptionChange={(value) =>dispatch({type: "setPriority", payload: value})} placeholder="Select Priority" />*/}
 
-                {/*<PrivateRoute message="" needNavigators={false}>*/}
-                {/*    <div onClick={(e) => e.stopPropagation()} className="">*/}
-                {/*        <ShowCategories dispatch={dispatch} />*/}
-                {/*    </div>*/}
-                {/*</PrivateRoute>*/}
-                <button disabled={isAddingTask} className={`font-semibold capitalize px-4 py-2 ${type === "create" ? "bg-cyan-700 hover:bg-cyan-600" : type === "edit" && "bg-yellow-500 hover:bg-yellow-600"} transition-colors duration-200 cursor-pointer sm:self-end rounded`} type="submit">{type === "create" ? "Create" : "Edit"} Task</button>
+                <DropDownv2>
+                    <DropDownv2.Select onChange={(value) => dispatch({type: "setPriority", payload: value})}>
+                        <DropDownv2.Option optionValue={1} optionLabel={"⭐"} />
+                        <DropDownv2.Option optionValue={2} optionLabel={"⭐⭐"} />
+                        <DropDownv2.Option optionValue={3} optionLabel={"⭐⭐⭐"} />
+                        <DropDownv2.Option optionValue={4} optionLabel={"⭐⭐⭐⭐"} />
+                        <DropDownv2.Option optionValue={5} optionLabel={"⭐⭐⭐⭐⭐"} />
+                    </DropDownv2.Select>
+                </DropDownv2>
+
+                <PrivateRoute message="" needNavigators={false}>
+                    <div onClick={(e) => e.stopPropagation()} className="">
+                        <ShowCategories dispatch={dispatch} />
+                    </div>
+                </PrivateRoute>
+                <div className="flex flex-row gap-x-2 self-end">
+                    <button onClick={handleReset} className={`bg-black hover:bg-white hover:text-black font-semibold capitalize px-4 py-2 transition-colors duration-200 cursor-pointer sm:self-end rounded`} type="reset">Reset</button>
+                    <button disabled={isAddingTask} className={`font-semibold capitalize px-4 py-2 ${type === "create" ? "bg-cyan-700 hover:bg-cyan-600" : type === "edit" && "bg-yellow-500 hover:bg-yellow-600"} transition-colors duration-200 cursor-pointer sm:self-end rounded`} type="submit">{type === "create" ? "Create" : "Edit"} Task</button>
+                </div>
             </div>
         </form>
     );
