@@ -26,8 +26,6 @@ const initialState = {
 
 const CreateTodo = function ({type="create", editData=null}) {
 
-    const priorityRef = useRef();
-
     function reducer(state, action) {
         switch (action.type) {
             case "setEndDate":
@@ -41,7 +39,7 @@ const CreateTodo = function ({type="create", editData=null}) {
             case "setCategory":
                 return {...state, taskCategory: action.payload};
             case "resetForm":
-                return {...state, taskTitle: "", taskDescription: ""};
+                return {...state, taskTitle: "", taskDescription: "", taskPriority: "", taskCategory: ""};
             case "initializeEditData":
                 return {...state, ...action.payload};
             default:
@@ -71,9 +69,8 @@ const CreateTodo = function ({type="create", editData=null}) {
     const handleSubmit = function(e) {
         e.preventDefault();
         console.log(taskPriority, "taskPriority");
-        if (!taskEndDate || !taskTitle || !taskPriority || !taskDescription) {
+        if (!taskEndDate || !taskTitle || !taskPriority || !taskDescription || !taskCategory) {
             toast.error("Please fill all the fields");
-            priorityRef.current.resetSelect();
             return;
         }
 
@@ -142,9 +139,9 @@ const CreateTodo = function ({type="create", editData=null}) {
 
                 {/*shadCN DropDown*/}
                 {/*<SelectPriority ref={priorityRef} onOptionChange={(value) =>dispatch({type: "setPriority", payload: value})} placeholder="Select Priority" />*/}
-
-                <DropDownv2>
-                    <DropDownv2.Select onChange={(value) => dispatch({type: "setPriority", payload: value})}>
+                <DropDownv2 onChange={(value) => dispatch({type: "setPriority", payload: value})}>
+                    <DropDownv2.Select value={taskPriority}>
+                        <DropDownv2.Option optionValue="" optionLabel={"Select Priority"} />
                         <DropDownv2.Option optionValue={1} optionLabel={"⭐"} />
                         <DropDownv2.Option optionValue={2} optionLabel={"⭐⭐"} />
                         <DropDownv2.Option optionValue={3} optionLabel={"⭐⭐⭐"} />
@@ -155,7 +152,7 @@ const CreateTodo = function ({type="create", editData=null}) {
 
                 <PrivateRoute message="" needNavigators={false}>
                     <div onClick={(e) => e.stopPropagation()} className="">
-                        <ShowCategories dispatch={dispatch} />
+                        <ShowCategories dispatch={(value) => dispatch({type: "setCategory", payload: value})} categoryvalue={taskCategory} />
                     </div>
                 </PrivateRoute>
                 <div className="flex flex-row gap-x-2 self-end">

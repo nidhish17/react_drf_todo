@@ -5,7 +5,7 @@ import DropDownv2 from "@/components/DropDownv2.jsx";
 import AddCategoryForm from "@/components/AddCategoryForm.jsx";
 import {FaPlus} from "react-icons/fa";
 
-const ShowCategories = function ({dispatch}) {
+const ShowCategories = function ({dispatch, categoryvalue}) {
 
     // get task categories
     const query = useQuery({
@@ -19,8 +19,9 @@ const ShowCategories = function ({dispatch}) {
     const {openModal} = useModal();
 
     return (
-        <DropDownv2>
-            <DropDownv2.Select>
+        <DropDownv2 onChange={dispatch}>
+            <DropDownv2.Select value={categoryvalue}>
+                <DropDownv2.Option optionValue="" optionLabel="Select Category" />
                 {isPending ? "Loading..." : (
                     data.map((taskCategory) => (
                         <DropDownv2.Option key={taskCategory.id} optionValue={taskCategory.id} optionLabel={taskCategory.category_title} />

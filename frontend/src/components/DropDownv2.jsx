@@ -1,16 +1,30 @@
-import {createContext, useState} from "react";
-import {IoIosArrowDown} from "react-icons/io";
+import {createContext, useContext, useState} from "react";
+import {IoIosArrowDown, IoIosCloseCircle} from "react-icons/io";
 
 const DropdownContext = createContext(null);
 
 const DropDownv2 = function ({children, onChange, footer}) {
 
-    const dropdownContext = {
+    const [selectedValue, setSelectedValue] = useState("");
 
+    const resetSelected = function () {
+        setSelectedValue("");
+    }
+
+    const handleChange = function (newSelectedValue) {
+        setSelectedValue(newSelectedValue);
+        onChange?.(newSelectedValue);
+    }
+
+
+    const contextValue = {
+        handleChange,
+        setSelectedValue,
+        resetSelected
     }
 
     return (
-        <DropdownContext.Provider value={dropdownContext}>
+        <DropdownContext.Provider value={contextValue}>
             <div className="flex gap-x-2">
                 {children}
             </div>
@@ -18,22 +32,17 @@ const DropDownv2 = function ({children, onChange, footer}) {
     )
 }
 
-const Select = function ({children, onChange}) {
-    const [selectedValue, setSelectedValue] = useState("");
+const Select = function ({children, value}) {
 
-    const resetSelected = function () {
-        setSelectedValue("");
-    }
+    const {handleChange} = useContext(DropdownContext);
 
-    const handleChange = function (e) {
-        const newSelectedValue = e.target.value;
-        setSelectedValue(newSelectedValue);
-        onChange?.(newSelectedValue);
+    const onSelectChange = (e) => {
+        handleChange(e.target.value);
     }
 
     return (
         <div className="relative basis-full">
-            <select value={selectedValue} onChange={handleChange}
+            <select value={value} onChange={onSelectChange}
                 className="w-full border px-4 py-2 rounded cursor-pointer appearance-none relative outline-none">
                 {children}
             </select>
@@ -44,8 +53,9 @@ const Select = function ({children, onChange}) {
 }
 
 const Option = function ({optionValue, optionLabel}) {
+    const isPlaceholder = optionValue === "";
     return (
-        <option className="bg-neutral-800 text-white" value={optionValue}>{optionLabel}</option>
+        <option hidden={isPlaceholder} className="bg-neutral-800 text-white" value={optionValue}>{optionLabel}</option>
     )
 }
 
